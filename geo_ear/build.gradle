@@ -18,7 +18,7 @@ ear {
     libDirName ''				// set to empty string so that there will be no tag element created in application.xml
                             	
     deploymentDescriptor {  // custom entries for application.xml
-        displayName = 'Geolocation services EAR v' + VERSION_PROJECT  // defaults to project.name
-        webModule(WAR_REST_BASENAME + '-' + VERSION_PROJECT + '.war', '/geo')  // wouldn't deploy since my.war isn't a deploy depencency
+        displayName = 'Geolocation services EAR v' + VERSION_PROJECT 
+        webModule(WAR_REST_BASENAME + '-' + VERSION_PROJECT + '.war', '/geo/rest')
     }
 }
