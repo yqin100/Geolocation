@@ -1,0 +1,28 @@
+apply plugin: "war"
+
+version = VERSION_PROJECT
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':geo_core')
+    compile 'log4j:log4j:1.2.17'
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'    
+    compile 'org.springframework:spring-webmvc:4.0.7.RELEASE'
+
+    providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
+    
+    testCompile 'junit:junit:4.+'
+    testCompile 'commons-collections:commons-collections:3.2'
+	testCompile 'org.springframework:spring-test:4.0.7.RELEASE'
+	testCompile 'org.mockito:mockito-all:1.9.5'
+}
+
+war {
+	baseName WAR_REST_BASENAME
+}

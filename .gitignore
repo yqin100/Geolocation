@@ -1,0 +1,9 @@
+.classpath
+.project
+.settings
+geo_core/bin
+geo_core/build
+geo_ear/build
+geo_rest/bin
+geo_rest/build
+geo_rest/logs
