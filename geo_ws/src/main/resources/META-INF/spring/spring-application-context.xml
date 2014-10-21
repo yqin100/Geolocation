@@ -12,4 +12,8 @@
     <context:component-scan base-package="com.agilex.geo"/>
 
     <sws:annotation-driven/>
+    
+    <!--=============================== Properties ===============================-->
+	<context:property-placeholder location="classpath:validation.properties" ignore-unresolvable="true" />
+    
 </beans>

@@ -2,7 +2,7 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
    <soapenv:Header/>
    <soapenv:Body>
-      <wsHelloWorldRequest input="testHelloWorldInputSoap" xmlns="http://agilex.com/geo/xsd/helloWorld">
+      <wsHelloWorldRequest input="testHello" xmlns="http://agilex.com/geo/xsd/helloWorld">
       </wsHelloWorldRequest>
    </soapenv:Body>
 </soapenv:Envelope>
