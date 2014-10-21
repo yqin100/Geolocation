@@ -1,1 +1,1 @@
-include 'geo_core', 'geo_ws', 'geo_rest', 'geo_ear'
+include 'geo_core', 'geo_business', 'geo_ws', 'geo_rest', 'geo_ear'
