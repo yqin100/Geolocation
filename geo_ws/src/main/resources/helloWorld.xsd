@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0"
+	targetNamespace="http://agilex.com/geo/xsd/helloWorld" 
+	xmlns="http://agilex.com/geo/xsd/helloWorld"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified">
+
+	<!-- *****************************************************
+	Critical: All elements need to end in "response"/"request"
+	so that the WSDL generation can detect them as messages
+		 ***************************************************** -->
+	
+    <xs:element name="wsHelloWorldRequest">
+        <xs:complexType>
+            <xs:attribute name="input" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="wsHelloWorldResponse">
+        <xs:complexType>
+            <xs:attribute name="input" type="xs:string" use="required"/>
+            <xs:attribute name="output" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

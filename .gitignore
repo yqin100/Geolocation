@@ -7,3 +7,5 @@ geo_ear/build
 geo_rest/bin
 geo_rest/build
 geo_rest/logs
+geo_ws/bin
+geo_ws/build

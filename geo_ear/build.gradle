@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     //following dependencies will become the ear modules and placed in the ear root
+    deploy project(path: ':geo_ws', configuration: 'archives')
     deploy project(path: ':geo_rest', configuration: 'archives')
 }
 
@@ -19,6 +20,7 @@ ear {
                             	
     deploymentDescriptor {  // custom entries for application.xml
         displayName = 'Geolocation services EAR v' + VERSION_PROJECT 
+        webModule(WAR_WS_BASENAME + '-' + VERSION_PROJECT + '.war', '/geo/ws')
         webModule(WAR_REST_BASENAME + '-' + VERSION_PROJECT + '.war', '/geo/rest')
     }
 }
