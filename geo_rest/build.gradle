@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    compile project(':geo_core')
-    compile project(':geo_business')
+    compile project(':' + PROJECT_GEO_CORE)
+    compile project(':' + PROJECT_GEO_BUSINESS)
     compile 'log4j:log4j:1.2.17'
     compile 'org.slf4j:slf4j-log4j12:1.7.7'    
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'    

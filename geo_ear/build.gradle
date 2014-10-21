@@ -9,8 +9,8 @@ repositories {
 
 dependencies {
     //following dependencies will become the ear modules and placed in the ear root
-    deploy project(path: ':geo_ws', configuration: 'archives')
-    deploy project(path: ':geo_rest', configuration: 'archives')
+    deploy project(path: ':' + PROJECT_GEO_WS, configuration: 'archives')
+    deploy project(path: ':' + PROJECT_GEO_REST, configuration: 'archives')
 }
 
 ear {

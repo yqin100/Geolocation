@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':geo_core')
+    compile project(':' + PROJECT_GEO_CORE)
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.springframework:spring-webmvc:4.0.7.RELEASE'
 
