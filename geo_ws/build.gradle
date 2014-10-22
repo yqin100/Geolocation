@@ -61,8 +61,6 @@ task genJaxb {
 dependencies {
     jaxb ('com.sun.xml.bind:jaxb-xjc:2.2.4-1')
     compile (files(genJaxb.classesDir).builtBy(genJaxb))
-    compile project(':' + PROJECT_GEO_CORE)
-    compile project(':' + PROJECT_GEO_BUSINESS)
     
     // depends on spring framework 4.0.5.RELEASE
     compile 'log4j:log4j:1.2.17'
@@ -71,6 +69,10 @@ dependencies {
     compile 'wsdl4j:wsdl4j:+'
     compile 'org.apache.ws.xmlschema:xmlschema-core:2.1.0'
 
+	// the project jars will be added to the root of the ear file
+	// "configuration: 'archives'" will make the operation transitive
+    providedCompile project(path: ':' + PROJECT_GEO_CORE, configuration: 'archives')
+    providedCompile project(path: ':' + PROJECT_GEO_BUSINESS, configuration: 'archives')
     providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
     
     testCompile 'junit:junit:4.+'
@@ -81,4 +83,8 @@ dependencies {
 
 war {
 	baseName WAR_WS_BASENAME
+	
+    manifest {
+    	attributes('Class-Path' : MY_MANIFEST_CLASSPATH)
+    }
 }

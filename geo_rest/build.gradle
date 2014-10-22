@@ -10,13 +10,15 @@ repositories {
 }
 
 dependencies {
-    compile project(':' + PROJECT_GEO_CORE)
-    compile project(':' + PROJECT_GEO_BUSINESS)
     compile 'log4j:log4j:1.2.17'
     compile 'org.slf4j:slf4j-log4j12:1.7.7'    
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'    
     compile 'org.springframework:spring-webmvc:4.0.7.RELEASE'
 
+	// the project jars will be added to the root of the ear file
+	// "configuration: 'archives'" will make the operation transitive
+    providedCompile project(path: ':' + PROJECT_GEO_CORE, configuration: 'archives')
+    providedCompile project(path: ':' + PROJECT_GEO_BUSINESS, configuration: 'archives')
     providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
     
     testCompile 'junit:junit:4.+'
@@ -27,4 +29,8 @@ dependencies {
 
 war {
 	baseName WAR_REST_BASENAME
+	
+    manifest {
+    	attributes('Class-Path' : MY_MANIFEST_CLASSPATH)
+    }
 }

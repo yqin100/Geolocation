@@ -1,0 +1,4 @@
+ext.jarExtension = '.jar'
+ext.coreJarName = JAR_CORE_BASENAME + '-' + VERSION_PROJECT + jarExtension
+ext.businessJarName = JAR_BUSINESS_BASENAME + '-' + VERSION_PROJECT + jarExtension
+ext.MY_MANIFEST_CLASSPATH = coreJarName + ' ' + businessJarName

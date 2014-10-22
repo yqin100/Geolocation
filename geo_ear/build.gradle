@@ -11,6 +11,9 @@ dependencies {
     //following dependencies will become the ear modules and placed in the ear root
     deploy project(path: ':' + PROJECT_GEO_WS, configuration: 'archives')
     deploy project(path: ':' + PROJECT_GEO_REST, configuration: 'archives')
+	// earlib will not add jars/wars to the application.xml file
+    earlib project(path: ':' + PROJECT_GEO_CORE, configuration: 'archives')
+    earlib project(path: ':' + PROJECT_GEO_BUSINESS, configuration: 'archives')
 }
 
 ear {
