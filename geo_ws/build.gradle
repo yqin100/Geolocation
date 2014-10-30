@@ -70,7 +70,7 @@ dependencies {
     compile 'org.apache.ws.xmlschema:xmlschema-core:2.1.0'
     // rest
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'    
-    compile 'org.springframework:spring-webmvc:4.0.7.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.1.1.RELEASE'
 
 	// the project jars will be added to the root of the ear file
 	// "configuration: 'archives'" will make the operation transitive
