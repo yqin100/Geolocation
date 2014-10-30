@@ -8,7 +8,7 @@
        ">
 
     <!-- Get the wsdl by typing into the browser [server url]/[context root]/[id].wsdl -->
-    <!-- Example http://localhost:9080/geo/ws/helloWorld.wsdl -->
+    <!-- Example http://localhost:9080/geo/soap/helloWorld.wsdl -->
     <sws:dynamic-wsdl id="helloWorld" portTypeName="helloWorldPortType" locationUri="/soap/helloWorld/"
                       targetNamespace="http://agilex.com/geo/xsd/helloWorld">
         <sws:xsd location="/WEB-INF/classes/helloWorld.xsd"/>

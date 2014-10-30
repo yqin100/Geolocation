@@ -10,7 +10,6 @@ repositories {
 dependencies {
     //following dependencies will become the ear modules and placed in the ear root
     deploy project(path: ':' + PROJECT_GEO_WS, configuration: 'archives')
-    deploy project(path: ':' + PROJECT_GEO_REST, configuration: 'archives')
 	// earlib will not add jars/wars to the application.xml file
     earlib project(path: ':' + PROJECT_GEO_ESRI, configuration: 'archives')
     earlib project(path: ':' + PROJECT_GEO_CORE, configuration: 'archives')
@@ -24,7 +23,6 @@ ear {
                             	
     deploymentDescriptor {  // custom entries for application.xml
         displayName = 'Geolocation services EAR v' + VERSION_PROJECT 
-        webModule(WAR_WS_BASENAME + '-' + VERSION_PROJECT + '.war', '/geo/ws')
-        webModule(WAR_REST_BASENAME + '-' + VERSION_PROJECT + '.war', '/geo/rest')
+        webModule(WAR_WS_BASENAME + '-' + VERSION_PROJECT + '.war', '/geo')
     }
 }

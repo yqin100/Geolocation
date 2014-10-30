@@ -4,7 +4,7 @@
 # Don't forget to make the file executable by "chmod +x <filename>"
 echo
 
-curl --request POST --header "content-type: text/xml" -d @helloWorldSoapEnvelope.xml http://localhost:9080/geo/ws
+curl --request POST --header "content-type: text/xml" -d @helloWorldSoapEnvelope.xml http://localhost:9080/geo/soap
 
 echo
 echo
