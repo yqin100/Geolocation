@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    compile project(path: ':' + PROJECT_GEO_CORE)
 	compile fileTree(dir: 'lib', include: ['*.jar'])
     compile 'org.slf4j:slf4j-api:1.7.7'
     

@@ -1,23 +1,37 @@
 package com.agilex.geo.service;
 
+import java.util.List;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import com.agilex.geo.exception.GeoEsriException;
 import com.agilex.geo.model.HelloWorldResponse;
+import com.agilex.geo.provider.GeoProvider;
+import com.agilex.geo.provider.GeoResult;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"file:src/test/resources/spring-application-context.xml"})
+@RunWith(MockitoJUnitRunner.class)
 public class TestHelloWorldService extends Assert {
-	@Autowired
-	private HelloWorldService helloWorldService;
+    @Mock
+    GeoProvider<List<GeoResult>, GeoEsriException> esriExternalProvider;
+    @InjectMocks
+	private HelloWorldServiceImpl helloWorldService;
 
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
+    
 	@Test
 	public void testServiceString() {
 		String input = "testInputString";
+
 		String output = helloWorldService.getHelloString(input);
 		
 		assertEquals("Hello World " + input, output);

@@ -1,23 +1,24 @@
 package com.agilex.geo.esri;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agilex.geo.exception.GeoEsriException;
+import com.agilex.geo.provider.GeoPoint;
+import com.agilex.geo.provider.GeoProvider;
+import com.agilex.geo.provider.GeoResult;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.LinearUnit;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
-import com.esri.core.geometry.Unit;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorFindParameters;
 import com.esri.core.tasks.geocode.LocatorGeocodeResult;
-import com.esri.runtime.ArcGISRuntime;
 
-public class EsriUtility {
+public class EsriUtility implements GeoProvider<List<GeoResult>, GeoEsriException> {
 	// spatial reference of points stored in lat-lon coordinates: WGS84 (wkid: 4326)
 	private static int SPATIAL_REFERENCE_WIKID = 4326;
 	private static String REST_URL = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer";
@@ -27,9 +28,16 @@ public class EsriUtility {
 		BASIC,
 		STANDARD;
 	}
+	public enum RESULT_MAP {
+		POINT,
+		REQUEST_ADDRESS,
+		RESPONSE_ADDRESS,
+		CONFIDENCE_LEVEL
+	}
     private Mode currentMode = Mode.DEVELOPER;
     
     public EsriUtility() {
+    	this(null, null, null);
     }
     
     public EsriUtility(String restURL) {
@@ -43,14 +51,27 @@ public class EsriUtility {
     public EsriUtility(String restURL, String clientID, String license) {
     	if (restURL != null) {
         	REST_URL = restURL;
+        	log.info("Set REST URL for ESRI to be => " + REST_URL);
     	}
     	if (clientID != null) {
-    		ArcGISRuntime.setClientID(clientID);
+    		// TODO Uncomment this for production
+    		//ArcGISRuntime.setClientID(clientID);
     		currentMode = Mode.BASIC;
     	}
     	if (license != null) {
-    		ArcGISRuntime.License.setLicense(license);
+    		// TODO Uncomment this for production
+    		//ArcGISRuntime.License.setLicense(license);
     		currentMode = Mode.STANDARD;
+    	}
+    	
+    	if (currentMode == Mode.BASIC) {
+        	log.info("ESRI running in BASIC mode");
+    	}
+    	else if (currentMode == Mode.STANDARD) {
+        	log.info("ESRI running in STANDARD mode");
+    	}
+    	else {
+        	log.info("ESRI running in DEVELOPER mode");
     	}
     }
     
@@ -72,11 +93,13 @@ public class EsriUtility {
     	}
     }
     
-    public List<LocatorGeocodeResult> getGeocodePoint(String address) throws Exception {
+    @Override
+    public List<GeoResult> getGeocodePoint(String address) throws GeoEsriException {
     	return getGeocodePoint(address, 1);
     }
     
-    public List<LocatorGeocodeResult> getGeocodePoint(String address, int numResults) throws GeoEsriException {
+    @Override
+    public List<GeoResult> getGeocodePoint(String address, int numResults) throws GeoEsriException {
     	checkLicensed();
     	
     	if (numResults < 0) {
@@ -89,15 +112,29 @@ public class EsriUtility {
 		List<LocatorGeocodeResult> results;
 		try {
 			results = locator.find(parameters);
-			return results;
+			return convertResults(results);
 		} catch (Exception e) {
 			throw new GeoEsriException(e);
 		} finally {
 			locator.dispose();
 		}
     }
+    
+    private List<GeoResult> convertResults(List<LocatorGeocodeResult> results) {
+    	List<GeoResult> retList = new ArrayList<GeoResult>();
+    	for (LocatorGeocodeResult result : results) {
+    		GeoResult retResult = new GeoResult();
+    		retResult.getResultMap().put(RESULT_MAP.POINT.toString(), new GeoPoint(result.getLocation().getX(), result.getLocation().getY()));
+    		retResult.getResultMap().put(RESULT_MAP.CONFIDENCE_LEVEL.toString(), result.getScore());
+    		retResult.getResultMap().put(RESULT_MAP.REQUEST_ADDRESS.toString(), result.getAddress());
+    		retResult.getResultMap().put(RESULT_MAP.RESPONSE_ADDRESS.toString(), result.getAttributes().get("Address"));
+			retList.add(retResult);
+		}
+    	return retList;
+    }
 
-    public double getDistance(Point point1, Point point2) {
+    @Override
+    public double getDistance(GeoPoint point1, GeoPoint point2) {
 		return getDistance(point1, point2, LinearUnit.Code.MILE_STATUTE);
     }
     
@@ -108,50 +145,10 @@ public class EsriUtility {
      * @param unit LinearUnit.Code for units
      * @return The distance, in unit measurement, between the two points
      */
-    public double getDistance(Point point1, Point point2, int unit) {
+    @Override
+    public double getDistance(GeoPoint point1, GeoPoint point2, int unit) {
     	checkLicensed();
     	
-		return GeometryEngine.geodesicDistance(point1, point2, SpatialReference.create(SPATIAL_REFERENCE_WIKID), (LinearUnit)LinearUnit.create(unit));
+		return GeometryEngine.geodesicDistance(new Point(point1.getxLat(), point1.getyLon()), new Point(point2.getxLat(), point2.getyLon()), SpatialReference.create(SPATIAL_REFERENCE_WIKID), (LinearUnit)LinearUnit.create(unit));
     }
-    
-    public static void main(String[] args) throws Exception {
-		EsriUtility esri = new EsriUtility();
-		
-		double distance1 = GeometryEngine.geodesicDistance(
-				new Point(-77.4634138746498, 38.87251227532232),
-				new Point(-77.03480711599963, 38.88946905500046),
-				SpatialReference.create(4326),
-				new LinearUnit(4326));
-		System.out.println("Distance *** " + distance1);
-		
-		double distance = esri.getDistance(new Point(-77.4634138746498, 38.87251227532232), new Point(-77.03480711599963, 38.88946905500046));
-		System.out.println("Distance (default) = " + distance);
-		
-		distance = esri.getDistance(new Point(-77.4634138746498, 38.87251227532232), new Point(-77.03480711599963, 38.88946905500046), LinearUnit.Code.CENTIMETER);
-		System.out.println("Distance (centimeter) = " + distance);
-		
-		distance = esri.getDistance(new Point(-77.4634138746498, 38.87251227532232), new Point(-77.03480711599963, 38.88946905500046), LinearUnit.Code.FOOT_US);
-		System.out.println("Distance (foot) = " + distance);
-		
-		distance = esri.getDistance(new Point(-77.4634138746498, 38.87251227532232), new Point(-77.03480711599963, 38.88946905500046), LinearUnit.Code.INCH_US);
-		System.out.println("Distance (inch) = " + distance);
-		
-		distance = esri.getDistance(new Point(-77.4634138746498, 38.87251227532232), new Point(-77.03480711599963, 38.88946905500046), LinearUnit.Code.MILE_US);
-		System.out.println("Distance (meter) = " + distance);
-		
-		distance = esri.getDistance(new Point(-77.4634138746498, 38.87251227532232), new Point(-77.03480711599963, 38.88946905500046), LinearUnit.Code.MILE_US);
-		System.out.println("Distance (mile) = " + distance);
-
-		distance = esri.getDistance(new Point(-77.4634138746498, 38.87251227532232), new Point(-77.03480711599963, 38.88946905500046), LinearUnit.Code.YARD_US);
-		System.out.println("Distance (yard) = " + distance);
-		
-//		Distance (mile_Statute) = 23.138840497716494
-//		Distance (centimeter) = 3723835.4121957053
-//				Distance (foot) = 122172.83348178741
-//				Distance (inch) = 1466074.001781449
-//				Distance (meter) = 23.138794220035496
-//				Distance (mile) = 23.138794220035496
-//				Distance (yard) = 40724.27782726248
-    }
-    
 }

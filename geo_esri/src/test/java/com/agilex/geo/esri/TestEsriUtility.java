@@ -7,10 +7,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.agilex.geo.esri.EsriUtility.RESULT_MAP;
 import com.agilex.geo.exception.GeoEsriException;
+import com.agilex.geo.provider.GeoPoint;
+import com.agilex.geo.provider.GeoResult;
 import com.esri.core.geometry.LinearUnit;
 import com.esri.core.geometry.Point;
-import com.esri.core.tasks.geocode.LocatorGeocodeResult;
 
 public class TestEsriUtility extends Assert {
 	private static AddressToPoint addressToPoint_1;
@@ -31,10 +33,10 @@ public class TestEsriUtility extends Assert {
 		List<AddressToPoint> addressToPoints = Arrays.<AddressToPoint>asList(addressToPoint_1, addressToPoint_2, addressToPoint_3);
 
 		for (AddressToPoint addressToPoint : addressToPoints) {
-			Point resultPoint = esriUtility.getGeocodePoint(addressToPoint.getAddress()).get(0).getLocation();
+			GeoPoint resultPoint = (GeoPoint)esriUtility.getGeocodePoint(addressToPoint.getAddress()).get(0).getResultMap().get(RESULT_MAP.POINT.toString());
 			Point knownPoint = addressToPoint.getPoint();
-			assertEquals(knownPoint.getX(), resultPoint.getX(), 0);
-			assertEquals(knownPoint.getY(), resultPoint.getY(), 0);
+			assertEquals(knownPoint.getX(), resultPoint.getxLat(), 0);
+			assertEquals(knownPoint.getY(), resultPoint.getyLon(), 0);
 		}
 	}
 	
@@ -46,7 +48,7 @@ public class TestEsriUtility extends Assert {
 	@Test
 	public void testNumresults() throws GeoEsriException {
 		String address = addressToPoint_1.getAddress();
-		List<LocatorGeocodeResult> results;
+		List<GeoResult> results;
 		int numResults;
 		
 		numResults = 1;
@@ -68,8 +70,8 @@ public class TestEsriUtility extends Assert {
 	
 	@Test
 	public void testDistance() {
-		Point point1 = addressToPoint_1.getPoint();
-		Point point2 = addressToPoint_3.getPoint();
+		GeoPoint point1 = new GeoPoint(addressToPoint_1.getPoint().getX(), addressToPoint_1.getPoint().getY());
+		GeoPoint point2 = new GeoPoint(addressToPoint_3.getPoint().getX(), addressToPoint_3.getPoint().getY());
 		double distance;
 		
 		distance = esriUtility.getDistance(point1, point2);

@@ -61,7 +61,8 @@ task genJaxb {
 dependencies {
     jaxb ('com.sun.xml.bind:jaxb-xjc:2.2.4-1')
     compile (files(genJaxb.classesDir).builtBy(genJaxb))
-    
+    compile project(path: ':' + PROJECT_GEO_ESRI)
+        
     // soap, depends on spring framework 4.0.5.RELEASE
     compile 'log4j:log4j:1.2.17'
     compile 'org.slf4j:slf4j-log4j12:1.7.7'

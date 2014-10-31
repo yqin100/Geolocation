@@ -19,5 +19,11 @@
     
     <!--=============================== Properties ===============================-->
 	<context:property-placeholder location="classpath:validation.properties" ignore-unresolvable="true" />
-    
+	
+    <!--=============================== Properties ===============================-->
+    <bean id="geoProvider1" class="com.agilex.geo.esri.EsriUtility">
+        <constructor-arg index="0" type="java.lang.String" value="http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/myTempURL" />
+        <constructor-arg index="1" type="java.lang.String" value="myClientID" />
+        <constructor-arg index="2" type="java.lang.String" value="myLicenseID" />
+    </bean>
 </beans>
